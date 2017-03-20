@@ -4,7 +4,7 @@
 
 ### Live Demo 
 
-- Visit this link : [https://sivcan.github.io/neighborhood-map](https://sivcan.github.io/neighborhood-map)
+- Visit this link : [https://sivcan.github.io/Neighborhood-Map](https://sivcan.github.io/Neighborhood-Map)
 
 ### Technical Specifications
 
