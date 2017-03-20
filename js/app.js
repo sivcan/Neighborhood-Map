@@ -296,7 +296,7 @@ function initMap() {
     }
 ];
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat:  28.661898, lng: 77.227396},
+        center: {lat:  28.613939, lng: 77.209021},
         zoom: 13,
         styles: styles,
         mapTypeControl: false
@@ -314,7 +314,7 @@ var AppViewModel = function () {
     var self = this;
 
     function initialize() {
-        fetchSushiRestaurants();
+        fetchCafes();
     }
 
 
@@ -325,8 +325,7 @@ var AppViewModel = function () {
         var infoWindow = new google.maps.InfoWindow();
         google.maps.event.addDomListener(window, 'load', initialize);
     }
-    self.sushiRestuarantList = ko.observableArray([]);
-    //self.numSushiRestaurant = ko.observable(0);
+    self.cafeList = ko.observableArray([]);
     self.query = ko.observable('');
     self.queryResult = ko.observable('');
 
@@ -335,18 +334,18 @@ var AppViewModel = function () {
     };
 
 
-    //List of sushi restaurants after filter based on query added in search
-    self.FilteredSushiRestuarantList = ko.computed(function () {
-        self.sushiRestuarantList().forEach(function (restaurant) {
-            restaurant.marker.setMap(null);
+    //List of cafe's after filter based on query added in search
+    self.FilteredcafeList = ko.computed(function () {
+        self.cafeList().forEach(function (cafe) {
+            cafe.marker.setMap(null);
         });
 
-        var results = ko.utils.arrayFilter(self.sushiRestuarantList(), function (restaurant) {
-            return restaurant.name().toLowerCase().contains(self.query().toLowerCase());
+        var results = ko.utils.arrayFilter(self.cafeList(), function (cafe) {
+            return cafe.name().toLowerCase().contains(self.query().toLowerCase());
         });
 
-        results.forEach(function (restaurant) {
-            restaurant.marker.setMap(map);
+        results.forEach(function (cafe) {
+            cafe.marker.setMap(map);
         });
         if (results.length > 0) {
             if (results.length == 1) {
@@ -362,40 +361,40 @@ var AppViewModel = function () {
     });
     self.queryResult("Loading Cafe's, Please wait...")
 
-    //function called when a restaurant is clicked from the filtered list
-    self.selectRestaurant = function (restaurant) {
-        infoWindow.setContent(restaurant.formattedInfoWindowData());
-        infoWindow.open(map, restaurant.marker);
-        map.panTo(restaurant.marker.position);
-        restaurant.marker.setAnimation(google.maps.Animation.BOUNCE);
-        restaurant.marker.setIcon(highlightedIcon);
-        self.sushiRestuarantList().forEach(function (unselected_restaurant) {
-            if (restaurant != unselected_restaurant) {
-                unselected_restaurant.marker.setAnimation(null);
-                unselected_restaurant.marker.setIcon(defaultIcon);
+    //function called when a cafe is clicked from the filtered list
+    self.selectCafe = function (cafe) {
+        infoWindow.setContent(cafe.formattedInfoWindowData());
+        infoWindow.open(map, cafe.marker);
+        map.panTo(cafe.marker.position);
+        cafe.marker.setAnimation(google.maps.Animation.BOUNCE);
+        cafe.marker.setIcon(highlightedIcon);
+        self.cafeList().forEach(function (unselected_cafe) {
+            if (cafe != unselected_cafe) {
+                unselected_cafe.marker.setAnimation(null);
+                unselected_cafe.marker.setIcon(defaultIcon);
             }
         });
     };
 
-    //function to fetch sushi restaurants in New Delhi
-    function fetchSushiRestaurants() {
+    //function to fetch cafes in New Delhi
+    function fetchCafes() {
         var data;
 
         $.ajax({
             url: 'https://api.foursquare.com/v2/venues/search',
             dataType: 'json',
-            data: 'client_id=ZY4CDJNSF1SWOWSP1AYCW3WKA5CEAUR1YBRCRE4LTGNQN5ZG&client_secret=OBRHMM00CX5DGDRTKTMMEDST1U00PA33UCQXMD0HBMCQQCAC&v=20130815%20&ll=28.661898,77.227396%20&query=cafe',
+            data: 'client_id=ZY4CDJNSF1SWOWSP1AYCW3WKA5CEAUR1YBRCRE4LTGNQN5ZG&client_secret=OBRHMM00CX5DGDRTKTMMEDST1U00PA33UCQXMD0HBMCQQCAC&v=20130815%20&ll=28.613939,77.209021%20&query=cafe',
             async: true,
         }).done(function (response) {
             data = response.response.venues;
-            data.forEach(function (restaurant) {
-                foursquare = new Foursquare(restaurant, map);
-                self.sushiRestuarantList.push(foursquare);
+            data.forEach(function (cafe) {
+                foursquare = new Foursquare(cafe, map);
+                self.cafeList.push(foursquare);
             });
-            self.sushiRestuarantList().forEach(function (restaurant) {
-                if (restaurant.map_location()) {
-                    google.maps.event.addListener(restaurant.marker, 'click', function () {
-                        self.selectRestaurant(restaurant);
+            self.cafeList().forEach(function (cafe) {
+                if (cafe.map_location()) {
+                    google.maps.event.addListener(cafe.marker, 'click', function () {
+                        self.selectCafe(cafe);
                     });
                 }
             });
@@ -418,10 +417,10 @@ function makeMarkerIcon(markerColor) {
 }
 
 //Foursquare model
-var Foursquare = function (restaurant, map) {
+var Foursquare = function (cafe, map) {
     var self = this;
-    self.name = ko.observable(restaurant.name);
-    self.location = restaurant.location;
+    self.name = ko.observable(cafe.name);
+    self.location = cafe.location;
     self.lat = self.location.lat;
     self.lng = self.location.lng;
     //map_location returns a computed observable of latitude and longitude
@@ -433,25 +432,25 @@ var Foursquare = function (restaurant, map) {
         }
     });
     self.formattedAddress = ko.observable(self.location.formattedAddress);
-    self.formattedPhone = ko.observable(restaurant.contact.formattedPhone);
-    self.marker = (function (restaurant) {
+    self.formattedPhone = ko.observable(cafe.contact.formattedPhone);
+    self.marker = (function (cafe) {
         var marker;
 
-        if (restaurant.map_location()) {
+        if (cafe.map_location()) {
             marker = new google.maps.Marker({
-                position: restaurant.map_location(),
+                position: cafe.map_location(),
                 map: map,
                 icon: defaultIcon
             });
         }
         return marker;
     })(self);
-    self.id = ko.observable(restaurant.id);
-    self.url = ko.observable(restaurant.url);
+    self.id = ko.observable(cafe.id);
+    self.url = ko.observable(cafe.url);
     self.formattedInfoWindowData = function () {
         return '<div class="info-window-content">' + '<a href="' + self.url() + '">' +
-            '<span class="info-window-header"><h3>' + self.name() + '</h3></span>' +
-            '</a><h5>' + self.formattedAddress()  + '<br>' + (self.formattedPhone()==undefined?'No Contact Info':self.formattedPhone()) + '</h5>' +
+            '<span class="info-window-header"><h4>' + self.name() + '</h4></span>' +
+            '</a><h6>' + self.formattedAddress()  + '<br>' + (self.formattedPhone()==undefined?'No Contact Info':self.formattedPhone()) + '</h6>' +
             '</div>';
     };
 };

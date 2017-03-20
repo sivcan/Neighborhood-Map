@@ -16,7 +16,7 @@
     <div class="options-box">
         <!--Search Box-->
         <header>
-            <h1>Cafe's in New Delhi</h1>
+            <h1>Cafe's in Delhi</h1>
             <form class="form-inline" id="form-search" data-bind="submit: search">
                 <input type="text" class="form-control" data-bind="value: query" id="query-input" placeholder="Search"
                        autofocus>
@@ -28,12 +28,14 @@
         </header>
         <!--List of search Results-->
         <aside>
-            <ul class="list-group" data-bind="foreach: {data: FilteredSushiRestuarantList, as: 'restaurant'}" id="list">
-                <li data-bind="click: $root.selectRestaurant" class="list-group-item">
-                    <span data-bind="text: restaurant.name"></span>
+            <ul class="list-group" data-bind="foreach: {data: FilteredcafeList, as: 'cafe'}" id="list">
+                <li data-bind="click: $root.selectCafe" class="list-group-item">
+                    <span data-bind="text: cafe.name"></span>
                 </li>
             </ul>
         </aside>
+        
+
     </div>
 
 </div>
