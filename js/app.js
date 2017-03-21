@@ -359,7 +359,7 @@ var AppViewModel = function () {
         }
         return results;
     });
-    self.queryResult("Loading Cafe's, Please wait...")
+    self.queryResult("Loading Cafe's, Please wait...");
 
     //function called when a cafe is clicked from the filtered list
     self.selectCafe = function (cafe) {
@@ -448,9 +448,9 @@ var Foursquare = function (cafe, map) {
     self.id = ko.observable(cafe.id);
     self.url = ko.observable(cafe.url);
     self.formattedInfoWindowData = function () {
-        return '<div class="info-window-content">' + '<a href="' + self.url() + '">' +
-            '<span class="info-window-header"><h4>' + self.name() + '</h4></span>' +
-            '</a><h6>' + self.formattedAddress()  + '<br>' + (self.formattedPhone()==undefined?'No Contact Info':self.formattedPhone()) + '</h6>' +
+        return '<div class="info-window-content">' + '<a href="' + (self.url()===undefined?'/':self.url()) + '">' +
+            '<span class="info-window-header"><h4>' + (self.name()===undefined?'Cafe name not available':self.name()) + '</h4></span>' +
+            '</a><h6>' + (self.formattedAddress()===undefined?'No address available':self.formattedAddress())  + '<br>' + (self.formattedPhone()===undefined?'No Contact Info':self.formattedPhone()) + '</h6>' +
             '</div>';
     };
 };
