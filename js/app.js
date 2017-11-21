@@ -299,7 +299,9 @@ function initMap() {
         center: {lat:  28.613939, lng: 77.209021},
         zoom: 13,
         styles: styles,
-        mapTypeControl: false
+        mapTypeControl: false,
+        tilt: 45,
++       rotateControl: true
     });
     ko.applyBindings(new AppViewModel());
 
@@ -454,4 +456,3 @@ var Foursquare = function (cafe, map) {
             '</div>';
     };
 };
-
