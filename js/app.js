@@ -296,12 +296,10 @@ function initMap() {
     }
 ];
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat:  28.613939, lng: 77.209021},
-        zoom: 13,
+        center: {lat:  48.213318, lng: 16.379549},
+        zoom: 18,
         styles: styles,
-        mapTypeControl: false,
-        tilt: 45,
-+       rotateControl: true
+        mapTypeControl: false
     });
     ko.applyBindings(new AppViewModel());
 
